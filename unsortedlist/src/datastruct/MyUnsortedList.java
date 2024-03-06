@@ -11,9 +11,6 @@ public class MyUnsortedList<E> implements UnsortedList<E> {
         private Link(E element) {
             this.element = element;
         }
-        public E element() {
-        	return this.element;
-        }
     }
 
     private Link<E> head;
@@ -46,10 +43,7 @@ public class MyUnsortedList<E> implements UnsortedList<E> {
     public int size() {
         return size;
     }
-    
-    public E getHead(){
-    	return this.head.element();
-    }
+
     @Override
     public void prepend(E element) {
         size++;
@@ -104,8 +98,12 @@ public class MyUnsortedList<E> implements UnsortedList<E> {
     }
 
     @Override
-    public E remove(int pos) throws IndexOutOfBoundsException {
-        if (pos < 0 || pos >= size) {
+    public E remove(int pos) throws IndexOutOfBoundsException, EmptyListException {
+        //ajout de l'exception en cas de liste vide
+    	if (size==0) {
+        	throw new EmptyListException();
+        }
+    	if (pos < 0 || pos >= size) {
             throw new IndexOutOfBoundsException();
         }
         if (pos == 0) {
@@ -116,7 +114,8 @@ public class MyUnsortedList<E> implements UnsortedList<E> {
         while (--pos > 0) {
             prevLink = prevLink.next;
         }
-
+        //ajout du décrément de la taille
+        --size;
         Link<E> removed = prevLink.next;
         prevLink.next = removed.next;
 

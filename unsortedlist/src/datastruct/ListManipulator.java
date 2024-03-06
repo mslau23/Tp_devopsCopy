@@ -11,7 +11,6 @@ public class ListManipulator {
 		list.append(3);
 		
 		System.out.println("Created a list of size " + list.size());
-		System.out.println(list);
 	}
 
 }

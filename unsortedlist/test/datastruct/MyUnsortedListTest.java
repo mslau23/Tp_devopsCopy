@@ -2,92 +2,192 @@ package datastruct;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class MyUnsortedListTest {
-	
-	MyUnsortedList<Integer> emptyList;
-	MyUnsortedList<Integer> filledList;
-	
-	@Before
-	public void setUp() 
-	{
-		emptyList = MyUnsortedList.of();
-		filledList = MyUnsortedList.of(1,2,3);
-	}
-	
+
+
+	/*@Test
+	public void test() {
+		fail("Not yet implemented");
+	}*/
+
+
+	//Tests isEmpty()
 	@Test
-	public void isEmptyTest()
-	{	
-		assertTrue("List is empty",emptyList.isEmpty());
-		assertFalse("List has elements",filledList.isEmpty());
+	public void testIsEmptyWithEmptyList() {
+		UnsortedList<String> emptyList = MyUnsortedList.of();
+		assertTrue(emptyList.isEmpty());
 	}
-	
+
 	@Test
-	public void sizeTest() 
-	{
-		assertEquals(0,emptyList.size());
-		assertEquals(3,filledList.size());
-//		System.out.println("Test passed");
+	public void testIsEmptyWithNotEmptyList() {
+		UnsortedList<String> notEmptyList = MyUnsortedList.of("element");
+		notEmptyList.append("element");
+		assertFalse(notEmptyList.isEmpty());
 	}
-	
+
+	//Test size()
 	@Test
-	public void prependTest() 
-	{
-		filledList.prepend(5);
-		emptyList.prepend(1);
-		assertTrue(5 == filledList.getHead());
-		assertTrue(1 == emptyList.getHead());
-		assertFalse(6 == filledList.getHead());
+	public void sizeEmpty() {
+		UnsortedList<String> emptyList = MyUnsortedList.of();
+		assertEquals(emptyList.size(),0);
 	}
-	
 	@Test
-	public void appendTest()
-	{
-		filledList.append(4);
-		emptyList.append(5); 
-		emptyList.append(6);
-		assertEquals("Lists are equal",MyUnsortedList.of(1,2,3,4), filledList);
-		assertNotEquals("Lists are not equal",MyUnsortedList.of(5,6,7), emptyList);
+	public void sizeNotEmpty() {
+		UnsortedList<String> notEmptyList = MyUnsortedList.of("element");
+		assertEquals(notEmptyList.size(),1);
 	}
-	
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void insertTest() throws Exception
-	{
-		//exception case
-		filledList.insert(5, -1);
-		filledList.insert(6, 4);
-		//normal functionality testing
-		filledList.insert(5, 2);
-		assertEquals("Lists are equals",MyUnsortedList.of(1,2,5,3), filledList);
-		filledList.insert(6, 3);
-		assertNotEquals("Lists are not equal",MyUnsortedList.of(1,2,5,3),filledList);
-		//test of case position == 0
-		emptyList.insert(1, 0);
-		assertEquals("Lists are equal",MyUnsortedList.of(1),emptyList);
+
+	//Test prepend(E element)
+	//test de la taille
+	@Test
+	public void preprendEmptyListSize() {
+		UnsortedList<String> emptyList = MyUnsortedList.of();
+		emptyList.prepend("element");
+		assertTrue(emptyList.size()==1);
 	}
-	
-	@Test(expected = EmptyListException.class)
-	public void popTest()
-	{
-		//exception case 
-		emptyList.pop();
-		
-		//basic Testing 
-		int expected = filledList.getHead();
-		int expectedSize = filledList.size() - 1;
-		int result = filledList.pop();
-		assertTrue("Popped the right head lol", expected == result);
-		assertTrue("Same size", expectedSize == filledList.size());
+	@Test
+	public void preprendNotEmptyListSize() {
+		UnsortedList<String> notEmptyList = MyUnsortedList.of("element");
+		notEmptyList.prepend("element");
+		assertTrue(notEmptyList.size()==2);
 	}
-	
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void removeTest() 
-	{	
-		//exception case 
-		filledList.remove(-1);
-		filledList.remove();
-		
+
+	//test du contenu
+	public void prependListElement() {
+		UnsortedList<String> listA = MyUnsortedList.of();
+		UnsortedList<String> listB = MyUnsortedList.of();
+		String element = new String("element");
+		listA.prepend(element);
+		listB.insert(element, 0);
+		assertEquals(listA, listB);
+	}
+
+	//Test append(E element)
+	//test de la taille
+	@Test
+	public void apprendEmptyListSize() {
+		UnsortedList<String> emptyList = MyUnsortedList.of();
+		emptyList.prepend("element");
+		assertTrue(emptyList.size()==1);
+	}
+	@Test
+	public void apprendNotEmptyListSize() {
+		UnsortedList<String> notEmptyList = MyUnsortedList.of("element");
+		notEmptyList.prepend("element");
+		assertTrue(notEmptyList.size()==2);
+	}
+
+	//test du contenu
+	@Test
+	public void apprendListElement() {
+		UnsortedList<String> listA = MyUnsortedList.of();
+		UnsortedList<String> listB = MyUnsortedList.of();
+		String element = new String("element");
+		listA.append(element);
+		listB.insert(element, listB.size());
+		assertEquals(listA, listB);
+	}
+
+
+	//Test insert(E element, int pos)
+	@Test
+	public void insertSpePos() {
+		UnsortedList<Integer> list = MyUnsortedList.of(1,2,4);
+		list.insert(3, 2);
+		assertEquals(4, list.size());
+	}
+	@Test
+	public void insertInvalidPos() {
+		UnsortedList<Integer> list = MyUnsortedList.of(1,2);
+		assertThrows(
+				IndexOutOfBoundsException.class, () -> {
+					list.insert(3,5);}
+				);
+		assertThrows(
+				IndexOutOfBoundsException.class, () -> {
+					list.insert(3,-1);}
+				);
+	}
+	@Test
+	public void insertBegining() {
+		UnsortedList<Integer> list = MyUnsortedList.of(1,2);
+		list.insert(0, 0);
+		assertEquals(3, list.size());	
+	}
+	@Test
+	public void insertEnd() {
+		UnsortedList<Integer> list = MyUnsortedList.of(1,2);
+		list.insert(3, list.size());
+		assertEquals(3, list.size());
+	}
+
+	//Test pop()
+	@Test
+	public void popEmpty() {
+		UnsortedList<Integer> list = MyUnsortedList.of();
+		assertThrows(EmptyListException.class, () -> list.pop());
+	}
+	@Test
+	public void popNotEmptyElement() {
+		UnsortedList<Integer> listA = MyUnsortedList.of(0,1);
+		assertEquals(Integer.valueOf(0), listA.pop());
+	}
+	@Test
+	public void popNotEmptySize() {
+		UnsortedList<Integer> listA = MyUnsortedList.of(0,1);
+		listA.pop();
+		assertEquals(1, listA.size());
+	}
+
+	//Test popLast()
+	@Test
+	public void popLastEmpty() {
+		UnsortedList<Integer> list = MyUnsortedList.of();
+		assertThrows(EmptyListException.class, () -> list.popLast());
+	}
+	@Test
+	public void popLastNotEmptyElement() {
+		UnsortedList<Integer> listA = MyUnsortedList.of(0,1);
+		assertEquals(Integer.valueOf(1), listA.popLast());
+	}
+	@Test
+	public void popLastNotEmptySize() {
+		UnsortedList<Integer> listA = MyUnsortedList.of(0,1);
+		listA.popLast();
+		assertEquals(1, listA.size());
+	}
+
+	//Test remove(int pos)
+	@Test
+	public void removeSpePos() {
+		UnsortedList<Integer> list = MyUnsortedList.of(1,2,3);
+		list.remove(2);
+		assertEquals(2, list.size());
+	}
+	@Test
+	public void removeInvalidPos() {
+		UnsortedList<Integer> list = MyUnsortedList.of(1,2);
+		assertThrows(
+				IndexOutOfBoundsException.class, () -> {
+					list.remove(3);}
+				);
+		assertThrows(
+				IndexOutOfBoundsException.class, () -> {
+					list.remove(-1);}
+				);
+	}
+	@Test
+	public void removeBegining() {
+		UnsortedList<Integer> list = MyUnsortedList.of(1,2);
+		list.remove(0);
+		assertEquals(1, list.size());
+	}
+	@Test
+	public void removeEnd() {
+		UnsortedList<Integer> list = MyUnsortedList.of(1,2);
+		list.remove(list.size()-1);
+		assertEquals(1, list.size());
 	}
 }
