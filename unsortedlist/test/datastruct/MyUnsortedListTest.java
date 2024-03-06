@@ -65,7 +65,6 @@ public class MyUnsortedListTest {
 	}
 
 	//Test append(E element)
-	//test de la taille
 	@Test
 	public void apprendEmptyListSize() {
 		UnsortedList<String> emptyList = MyUnsortedList.of();
